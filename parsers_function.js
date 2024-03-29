@@ -105,48 +105,32 @@ export const  addNewPost = async (postDonorSlug) => {
     });
     const page = await browser.newPage();
     await page.goto(
-        `https://fotl.com.ua/uk/blog/news/${postDonorSlug}`
-    );
+        'https://fotl.com.ua/uk/blog/news/${postDonorSlug}'
+);
 
     // const language = "ukrainian";
 
     const title = await getPageTitle(page);
     const content = await getMeinInf(page);
-    const characterCount = content.length;
 
-    if (characterCount < 1500) {
-        console.log('title: ' + title);
-        console.log('character count: ', characterCount);
-        console.log('content: ' + content);
-        console.log('Skipping...');
-    } else {
+    let number_symbols = 0
 
-        // const answer = await sendMessage(title, content);
-        // const imgId = await createImg(title)
-
-        // let answer;
-        // try {
-        //     answer = await sendMessage(title, content, language);
-        // } catch (error) {
-        //     console.error("Помилка під час відправки повідомлення:", error);
-        //     await browser.close();
-        //     return;
-        // }
-
-        //await createPost(answer.title, answer.content, postDonorSlug, imgId);
-
-        await browser.close();
-
-        console.log('title: ' + title);
-        console.log('character count: ', characterCount);
-        console.log('content: ' + content);
-        // console.log('-----------------');
-        // console.log('answer ' + answer);
-        console.log('Adding...');
+    for (let i of content) {
+        if (i !== ' ') {
+            number_symbols += 1
+        }
     }
 
+
+    if (number_symbols >= 1500) {
+        console.log('title: ' + title);
+        console.log('content: ' + content);
+        console.log('number_symbols: ' + number_symbols);
+        const answer = await sendMessage(title, content);
+        console.log(answer)
+    }
+
+    await browser.close();
     return 1;
 };
-
-
 
